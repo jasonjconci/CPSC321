@@ -1,0 +1,355 @@
+<font face="Courier New" size="2">
+<font color = "green"><i>/*
+
+<br/>Homework&nbsp;4&nbsp;Script
+
+<br/>Jason&nbsp;Conci
+
+<br/>jconci@zagmail.gonzaga.edu
+
+<br/>2&nbsp;October&nbsp;2018
+
+<br/>CPSC-321
+
+<br/>
+
+<br/>Description&nbsp;-
+
+<br/>1.&nbsp;Drops&nbsp;tables&nbsp;specified&nbsp;in&nbsp;spec&nbsp;sheet,&nbsp;if&nbsp;they&nbsp;exist
+
+<br/>2.&nbsp;Creates&nbsp;all&nbsp;tables&nbsp;in&nbsp;the&nbsp;spec&nbsp;sheet
+
+<br/>3.&nbsp;Populates&nbsp;tables&nbsp;(examples&nbsp;pertaining&nbsp;to&nbsp;USA,&nbsp;CAN,&nbsp;and&nbsp;MEX)
+
+<br/>4.&nbsp;Creates&nbsp;variables&nbsp;used&nbsp;in&nbsp;queries
+
+<br/>5.&nbsp;Runs&nbsp;specified&nbsp;queries&nbsp;in&nbsp;spec&nbsp;sheet
+
+<br/>*/</i></font>
+<br/><font color = "green"><i>/**&nbsp;DROP&nbsp;TABLE&nbsp;SECTION&nbsp;**/</i></font>
+<br/><font color = "blue">DROP</font>&nbsp;<font color = "blue">TABLE</font>&nbsp;<font color = "blue">IF</font>&nbsp;<font color = "blue">EXISTS</font>&nbsp;<font color = "maroon">border</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">DROP</font>&nbsp;<font color = "blue">TABLE</font>&nbsp;<font color = "blue">IF</font>&nbsp;<font color = "blue">EXISTS</font>&nbsp;<font color = "maroon">city</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">DROP</font>&nbsp;<font color = "blue">TABLE</font>&nbsp;<font color = "blue">IF</font>&nbsp;<font color = "blue">EXISTS</font>&nbsp;<font color = "maroon">province</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">DROP</font>&nbsp;<font color = "blue">TABLE</font>&nbsp;<font color = "blue">IF</font>&nbsp;<font color = "blue">EXISTS</font>&nbsp;<font color = "maroon">country</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/**&nbsp;CREATE&nbsp;TABLE&nbsp;SECTION&nbsp;**/</i></font>
+<br/><font color = "green"><i>/*
+
+<br/>Creates&nbsp;our&nbsp;country&nbsp;table.&nbsp;Primary&nbsp;key&nbsp;(country_code)&nbsp;ensures&nbsp;no&nbsp;two&nbsp;countries&nbsp;have&nbsp;the&nbsp;same
+
+<br/>country&nbsp;code.&nbsp;VARCHAR's&nbsp;used&nbsp;for&nbsp;the&nbsp;sake&nbsp;of&nbsp;simplicity.&nbsp;GDP&nbsp;capped&nbsp;at&nbsp;1&nbsp;trillion&nbsp;monetary
+
+<br/>units,&nbsp;with&nbsp;2&nbsp;sigfigs.&nbsp;Inflation&nbsp;capped&nbsp;at&nbsp;999.99%&nbsp;(assumedly,&nbsp;we&nbsp;won't&nbsp;exceed&nbsp;this).
+
+<br/>*/</i></font>
+<br/><font color = "blue">CREATE</font>&nbsp;<font color = "blue">TABLE</font>&nbsp;<font color = "maroon">country</font>
+<br/>&nbsp;&nbsp;<font color = "maroon">(</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">country_code</font>&nbsp;<font color = "black"><i>VARCHAR</i></font><font color = "maroon">(</font><font color = "black">100</font><font color = "maroon">)</font>&nbsp;<font color = "blue">NOT</font>&nbsp;<font color = "blue">NULL</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">country_name</font>&nbsp;<font color = "black"><i>VARCHAR</i></font><font color = "maroon">(</font><font color = "black">100</font><font color = "maroon">)</font>&nbsp;<font color = "blue">NOT</font>&nbsp;<font color = "blue">NULL</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">gdp</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black"><i>DECIMAL</i></font><font color = "maroon">(</font><font color = "black">14</font><font color = "silver">,</font>&nbsp;<font color = "black">2</font><font color = "maroon">)</font>&nbsp;<font color = "blue">NOT</font>&nbsp;<font color = "blue">NULL</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">inflation</font>&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black"><i>DECIMAL</i></font><font color = "maroon">(</font><font color = "black">5</font><font color = "silver">,</font>&nbsp;<font color = "black">2</font><font color = "maroon">)</font>&nbsp;<font color = "blue">NOT</font>&nbsp;<font color = "blue">NULL</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">PRIMARY</font>&nbsp;<font color = "blue">KEY</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">country_code</font><font color = "maroon">)</font>
+<br/>&nbsp;&nbsp;<font color = "maroon">)</font>
+<br/><font color = "maroon">engine</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">innodb</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>Creates&nbsp;our&nbsp;province&nbsp;table.&nbsp;Primary&nbsp;key&nbsp;(province_name,&nbsp;country_code)&nbsp;ensures&nbsp;no&nbsp;two&nbsp;provinces
+
+<br/>within&nbsp;thes&nbsp;same&nbsp;country&nbsp;have&nbsp;the&nbsp;same&nbsp;name.&nbsp;Foreign&nbsp;key&nbsp;constraint&nbsp;(country_code)&nbsp;->&nbsp;country
+
+<br/>(country&nbsp;code)&nbsp;ensures&nbsp;we&nbsp;don't&nbsp;add&nbsp;a&nbsp;province&nbsp;to&nbsp;the&nbsp;table,&nbsp;without&nbsp;its&nbsp;containing&nbsp;country
+
+<br/>existing&nbsp;in&nbsp;country&nbsp;first.&nbsp;VARCHAR's&nbsp;used&nbsp;for&nbsp;consistency&nbsp;and&nbsp;simplicity.&nbsp;Area&nbsp;capped&nbsp;at&nbsp;11
+
+<br/>digits&nbsp;(roughly&nbsp;the&nbsp;area&nbsp;of&nbsp;the&nbsp;earth).
+
+<br/>*/</i></font>
+<br/><font color = "blue">CREATE</font>&nbsp;<font color = "blue">TABLE</font>&nbsp;<font color = "maroon">province</font>
+<br/>&nbsp;&nbsp;<font color = "maroon">(</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">province_name</font>&nbsp;<font color = "black"><i>VARCHAR</i></font><font color = "maroon">(</font><font color = "black">100</font><font color = "maroon">)</font>&nbsp;<font color = "blue">NOT</font>&nbsp;<font color = "blue">NULL</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">country_code</font>&nbsp;&nbsp;<font color = "black"><i>VARCHAR</i></font><font color = "maroon">(</font><font color = "black">100</font><font color = "maroon">)</font>&nbsp;<font color = "blue">NOT</font>&nbsp;<font color = "blue">NULL</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">area</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black"><i>DECIMAL</i></font><font color = "maroon">(</font><font color = "black">11</font><font color = "silver">,</font>&nbsp;<font color = "black">2</font><font color = "maroon">)</font>&nbsp;<font color = "blue">NOT</font>&nbsp;<font color = "blue">NULL</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">PRIMARY</font>&nbsp;<font color = "blue">KEY</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">province_name</font><font color = "silver">,</font>&nbsp;<font color = "maroon">country_code</font><font color = "maroon">)</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">FOREIGN</font>&nbsp;<font color = "blue">KEY</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">country_code</font><font color = "maroon">)</font>&nbsp;<font color = "blue">REFERENCES</font>&nbsp;<font color = "maroon">country</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">country_code</font><font color = "maroon">)</font>
+<br/>&nbsp;&nbsp;<font color = "maroon">)</font>
+<br/><font color = "maroon">engine</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">innodb</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>Creates&nbsp;our&nbsp;city&nbsp;table.&nbsp;Primary&nbsp;key&nbsp;(province_name,&nbsp;country_code,&nbsp;city_name)&nbsp;ensures&nbsp;no&nbsp;two
+
+<br/>cities&nbsp;within&nbsp;the&nbsp;same&nbsp;province&nbsp;(follows,&nbsp;within&nbsp;the&nbsp;same&nbsp;country)&nbsp;have&nbsp;the&nbsp;same&nbsp;name.&nbsp;Foreign
+
+<br/>key&nbsp;constraint&nbsp;(province_name,&nbsp;country_code)&nbsp;->&nbsp;province(province_name,&nbsp;country_code)&nbsp;ensures
+
+<br/>we&nbsp;don't&nbsp;add&nbsp;a&nbsp;city&nbsp;to&nbsp;this&nbsp;table,&nbsp;without&nbsp;its&nbsp;containing&nbsp;province&nbsp;existing&nbsp;in&nbsp;province&nbsp;first.
+
+<br/>VARCHAR's&nbsp;used&nbsp;for&nbsp;consistency&nbsp;and&nbsp;simplicity.&nbsp;Population&nbsp;capped&nbsp;at&nbsp;10&nbsp;digits&nbsp;(roughly&nbsp;the&nbsp;pop
+
+<br/>of&nbsp;the&nbsp;earth),&nbsp;with&nbsp;no&nbsp;sigfigs&nbsp;since&nbsp;fractions&nbsp;of&nbsp;people&nbsp;don't&nbsp;make&nbsp;sense.
+
+<br/>*/</i></font>
+<br/><font color = "blue">CREATE</font>&nbsp;<font color = "blue">TABLE</font>&nbsp;<font color = "maroon">city</font>
+<br/>&nbsp;&nbsp;<font color = "maroon">(</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">city_name</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black"><i>VARCHAR</i></font><font color = "maroon">(</font><font color = "black">100</font><font color = "maroon">)</font>&nbsp;<font color = "blue">NOT</font>&nbsp;<font color = "blue">NULL</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">province_name</font>&nbsp;<font color = "black"><i>VARCHAR</i></font><font color = "maroon">(</font><font color = "black">100</font><font color = "maroon">)</font>&nbsp;<font color = "blue">NOT</font>&nbsp;<font color = "blue">NULL</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">country_code</font>&nbsp;&nbsp;<font color = "black"><i>VARCHAR</i></font><font color = "maroon">(</font><font color = "black">100</font><font color = "maroon">)</font>&nbsp;<font color = "blue">NOT</font>&nbsp;<font color = "blue">NULL</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">population</font>&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black"><i>DECIMAL</i></font><font color = "maroon">(</font><font color = "black">10</font><font color = "maroon">)</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">PRIMARY</font>&nbsp;<font color = "blue">KEY</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">city_name</font><font color = "silver">,</font>&nbsp;<font color = "maroon">province_name</font><font color = "silver">,</font>&nbsp;<font color = "maroon">country_code</font><font color = "maroon">)</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">FOREIGN</font>&nbsp;<font color = "blue">KEY</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">province_name</font><font color = "silver">,</font>&nbsp;<font color = "maroon">country_code</font><font color = "maroon">)</font>&nbsp;<font color = "blue">REFERENCES</font>&nbsp;<font color = "maroon">province</font>&nbsp;<font color = "maroon">(</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">province_name</font><font color = "silver">,</font>&nbsp;<font color = "maroon">country_code</font><font color = "maroon">)</font>
+<br/>&nbsp;&nbsp;<font color = "maroon">)</font>
+<br/><font color = "maroon">engine</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">innodb</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>Creates&nbsp;our&nbsp;border&nbsp;table.&nbsp;Primary&nbsp;key&nbsp;(country1_code,&nbsp;country2_code)&nbsp;ensures&nbsp;that&nbsp;no&nbsp;country&nbsp;border
+
+<br/>is&nbsp;described&nbsp;more&nbsp;than&nbsp;once&nbsp;(ALTER&nbsp;TABLE&nbsp;constraint&nbsp;below&nbsp;this&nbsp;CREATE&nbsp;TABLE&nbsp;statement&nbsp;also&nbsp;ensures
+
+<br/>symmetrical&nbsp;uniqueness&nbsp;across&nbsp;country&nbsp;codes).&nbsp;Foreign&nbsp;key&nbsp;constraints&nbsp;(country1_code)&nbsp;->&nbsp;country
+
+<br/>(country_code),&nbsp;and&nbsp;(country2_code)&nbsp;->&nbsp;country(country_code)&nbsp;ensures&nbsp;we&nbsp;don't&nbsp;describe&nbsp;a&nbsp;border
+
+<br/>between&nbsp;two&nbsp;countries,&nbsp;without&nbsp;those&nbsp;countries&nbsp;existing&nbsp;in&nbsp;table&nbsp;country&nbsp;first.&nbsp;VARCHAR's&nbsp;used
+
+<br/>for&nbsp;consistency&nbsp;and&nbsp;simplicity.&nbsp;Border&nbsp;length&nbsp;capped&nbsp;at&nbsp;11&nbsp;digits&nbsp;(roughly&nbsp;the&nbsp;area&nbsp;of&nbsp;the&nbsp;earth),
+
+<br/>fractions&nbsp;allowed&nbsp;to&nbsp;2&nbsp;decimal&nbsp;places.
+
+<br/>*/</i></font>
+<br/><font color = "blue">CREATE</font>&nbsp;<font color = "blue">TABLE</font>&nbsp;<font color = "maroon">border</font>
+<br/>&nbsp;&nbsp;<font color = "maroon">(</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">country1_code</font>&nbsp;<font color = "black"><i>VARCHAR</i></font><font color = "maroon">(</font><font color = "black">100</font><font color = "maroon">)</font>&nbsp;<font color = "blue">NOT</font>&nbsp;<font color = "blue">NULL</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">country2_code</font>&nbsp;<font color = "black"><i>VARCHAR</i></font><font color = "maroon">(</font><font color = "black">100</font><font color = "maroon">)</font>&nbsp;<font color = "blue">NOT</font>&nbsp;<font color = "blue">NULL</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">border_length</font>&nbsp;<font color = "black"><i>DECIMAL</i></font><font color = "maroon">(</font><font color = "black">11</font><font color = "silver">,</font>&nbsp;<font color = "black">2</font><font color = "maroon">)</font>&nbsp;<font color = "blue">NOT</font>&nbsp;<font color = "blue">NULL</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">PRIMARY</font>&nbsp;<font color = "blue">KEY</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">country1_code</font><font color = "silver">,</font>&nbsp;<font color = "maroon">country2_code</font><font color = "maroon">)</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">FOREIGN</font>&nbsp;<font color = "blue">KEY</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">country1_code</font><font color = "maroon">)</font>&nbsp;<font color = "blue">REFERENCES</font>&nbsp;<font color = "maroon">country</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">country_code</font><font color = "maroon">)</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">FOREIGN</font>&nbsp;<font color = "blue">KEY</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">country2_code</font><font color = "maroon">)</font>&nbsp;<font color = "blue">REFERENCES</font>&nbsp;<font color = "maroon">country</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">country_code</font><font color = "maroon">)</font>
+<br/>&nbsp;&nbsp;<font color = "maroon">)</font>
+<br/><font color = "maroon">engine</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">innodb</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>&#45;&#45;&nbsp;this&nbsp;line&nbsp;ensures&nbsp;that&nbsp;the&nbsp;primary&nbsp;keys&nbsp;are&nbsp;unique&nbsp;symmetrically</i></font>
+<br/><font color = "blue">ALTER</font>&nbsp;<font color = "blue">TABLE</font>&nbsp;<font color = "maroon">border</font>
+<br/>&nbsp;&nbsp;<font color = "blue">ADD</font>&nbsp;<font color = "blue">CONSTRAINT</font>&nbsp;<font color = "maroon">unique_pairing</font>&nbsp;<font color = "blue">UNIQUE</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">country1_code</font><font color = "silver">,</font>&nbsp;<font color = "maroon">country2_code</font><font color = "maroon">)</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/**&nbsp;SECTION&nbsp;FOR&nbsp;POPULATING&nbsp;TABLES&nbsp;WITH&nbsp;EXAMPLE&nbsp;DATA&nbsp;**/</i></font>
+<br/><font color = "blue">INSERT</font>&nbsp;<font color = "blue">INTO</font>&nbsp;<font color = "maroon">country</font>
+<br/><font color = "blue">VALUES</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">(</font><font color = "maroon">&quot;usa&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;united&nbsp;states&nbsp;of&nbsp;america&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">57466.79</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">3.60</font><font color = "maroon">)</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">INSERT</font>&nbsp;<font color = "blue">INTO</font>&nbsp;<font color = "maroon">country</font>
+<br/><font color = "blue">VALUES</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">(</font><font color = "maroon">&quot;can&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;canada&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">42157.93</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">4.50</font><font color = "maroon">)</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">INSERT</font>&nbsp;<font color = "blue">INTO</font>&nbsp;<font color = "maroon">country</font>
+<br/><font color = "blue">VALUES</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">(</font><font color = "maroon">&quot;mex&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;mexico&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">8201.31</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">2.70</font><font color = "maroon">)</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">INSERT</font>&nbsp;<font color = "blue">INTO</font>&nbsp;<font color = "maroon">province</font>
+<br/><font color = "blue">VALUES</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">(</font><font color = "maroon">&quot;ontario&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;can&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">456789</font><font color = "maroon">)</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">INSERT</font>&nbsp;<font color = "blue">INTO</font>&nbsp;<font color = "maroon">province</font>
+<br/><font color = "blue">VALUES</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">(</font><font color = "maroon">&quot;quebec&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;can&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">43289</font><font color = "maroon">)</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">INSERT</font>&nbsp;<font color = "blue">INTO</font>&nbsp;<font color = "maroon">province</font>
+<br/><font color = "blue">VALUES</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">(</font><font color = "maroon">&quot;oaxaca&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;mex&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">34278</font><font color = "maroon">)</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">INSERT</font>&nbsp;<font color = "blue">INTO</font>&nbsp;<font color = "maroon">province</font>
+<br/><font color = "blue">VALUES</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">(</font><font color = "maroon">&quot;california&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;usa&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">321789</font><font color = "maroon">)</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">INSERT</font>&nbsp;<font color = "blue">INTO</font>&nbsp;<font color = "maroon">city</font>
+<br/><font color = "blue">VALUES</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">(</font><font color = "maroon">&quot;san&nbsp;francisco&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;california&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;usa&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">800000</font><font color = "maroon">)</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">INSERT</font>&nbsp;<font color = "blue">INTO</font>&nbsp;<font color = "maroon">city</font>
+<br/><font color = "blue">VALUES</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">(</font><font color = "maroon">&quot;los&nbsp;angeles&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;california&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;usa&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">6000000</font><font color = "maroon">)</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">INSERT</font>&nbsp;<font color = "blue">INTO</font>&nbsp;<font color = "maroon">city</font>
+<br/><font color = "blue">VALUES</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">(</font><font color = "maroon">&quot;montreal&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;quebec&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;can&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">1700000</font><font color = "maroon">)</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">INSERT</font>&nbsp;<font color = "blue">INTO</font>&nbsp;<font color = "maroon">city</font>
+<br/><font color = "blue">VALUES</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">(</font><font color = "maroon">&quot;sacramento&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;california&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;usa&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">1500000</font><font color = "maroon">)</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">INSERT</font>&nbsp;<font color = "blue">INTO</font>&nbsp;<font color = "maroon">border</font>
+<br/><font color = "blue">VALUES</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">(</font><font color = "maroon">&quot;usa&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;can&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">5525.02</font><font color = "maroon">)</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">INSERT</font>&nbsp;<font color = "blue">INTO</font>&nbsp;<font color = "maroon">border</font>
+<br/><font color = "blue">VALUES</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">(</font><font color = "maroon">&quot;usa&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">&quot;mex&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "black">1954.00</font><font color = "maroon">)</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/**&nbsp;SECTION&nbsp;FOR&nbsp;CREATING&nbsp;VARIABLES&nbsp;USED&nbsp;IN&nbsp;QUERIES&nbsp;**/</i></font>
+<br/><font color = "blue">SET</font>&nbsp;<font color = "maroon">@gdp</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "black">40000</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">SET</font>&nbsp;<font color = "maroon">@inflation</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "black">4</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">SET</font>&nbsp;<font color = "maroon">@can_code</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">&quot;CAN&quot;</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">SET</font>&nbsp;<font color = "maroon">@usa_code</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">&quot;USA&quot;</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">SET</font>&nbsp;<font color = "maroon">@mex_code</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">&quot;MEX&quot;</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "blue">SET</font>&nbsp;<font color = "maroon">@sf_code</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">&quot;San&nbsp;Francisco&quot;</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/**&nbsp;SECTION&nbsp;CONTAINING&nbsp;QUERIES&nbsp;SPECIFIED&nbsp;IN&nbsp;HW&nbsp;SPECS&nbsp;**/</i></font>
+<br/><font color = "green"><i>&#45;&#45;&nbsp;Select&nbsp;the&nbsp;country&nbsp;codes&nbsp;where&nbsp;gdp&nbsp;is&nbsp;less&nbsp;than&nbsp;@gdp,&nbsp;and&nbsp;inflation&nbsp;is&nbsp;less&nbsp;than&nbsp;@inflation</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">country_code</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">country</font>&nbsp;<font color = "maroon">c</font>
+<br/><font color = "blue">WHERE</font>&nbsp;&nbsp;<font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">gdp</font>&nbsp;<font color = "silver">&gt;</font>&nbsp;<font color = "maroon">@gdp</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">AND</font>&nbsp;<font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">inflation</font>&nbsp;<font color = "silver">&lt;</font>&nbsp;<font color = "maroon">@inflation</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>First,&nbsp;joins&nbsp;province&nbsp;and&nbsp;city&nbsp;relations&nbsp;on&nbsp;(province_name,&nbsp;country_code),&nbsp;meaning
+
+<br/>that&nbsp;a&nbsp;city,&nbsp;in&nbsp;a&nbsp;given&nbsp;row,&nbsp;exists&nbsp;within&nbsp;the&nbsp;province&nbsp;in&nbsp;the&nbsp;row.&nbsp;Then,&nbsp;selecting
+
+<br/>all&nbsp;rows&nbsp;where&nbsp;the&nbsp;city's&nbsp;population&nbsp;is&nbsp;greater&nbsp;than&nbsp;1000.&nbsp;Then,&nbsp;selecting&nbsp;the&nbsp;names
+
+<br/>and&nbsp;areas&nbsp;of&nbsp;all&nbsp;(distinct)&nbsp;provinces&nbsp;containing&nbsp;1&nbsp;or&nbsp;more&nbsp;cities&nbsp;where&nbsp;pop&nbsp;>&nbsp;1000.
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "blue">DISTINCT</font>&nbsp;<font color = "maroon">p</font><font color = "silver">.</font><font color = "maroon">province_name</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">p</font><font color = "silver">.</font><font color = "maroon">area</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">province</font>&nbsp;<font color = "maroon">p</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">JOIN</font>&nbsp;<font color = "maroon">city</font>&nbsp;<font color = "maroon">c</font>&nbsp;<font color = "blue">USING</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">province_name</font><font color = "silver">,</font>&nbsp;<font color = "maroon">country_code</font><font color = "maroon">)</font>
+<br/><font color = "blue">WHERE</font>&nbsp;&nbsp;<font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">population</font>&nbsp;<font color = "silver">&gt;</font>&nbsp;<font color = "black">1000</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>Self&nbsp;explanatory&nbsp;-&nbsp;returns&nbsp;the&nbsp;sum&nbsp;of&nbsp;the&nbsp;areas&nbsp;of&nbsp;all&nbsp;provinces&nbsp;in&nbsp;the&nbsp;relation.
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "#FF0080"><b>Sum</b></font><font color = "maroon">(</font><font color = "maroon">area</font><font color = "maroon">)</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">province</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>Selecting&nbsp;all&nbsp;provinces&nbsp;in&nbsp;province&nbsp;p,&nbsp;where&nbsp;p.country_code&nbsp;=&nbsp;CAN,&nbsp;and&nbsp;then
+
+<br/>averaging&nbsp;the&nbsp;area&nbsp;of&nbsp;all&nbsp;provinces&nbsp;selected.
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "#FF0080"><b>Sum</b></font><font color = "maroon">(</font><font color = "maroon">p</font><font color = "silver">.</font><font color = "maroon">area</font><font color = "maroon">)</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">province</font>&nbsp;<font color = "maroon">p</font>
+<br/><font color = "blue">WHERE</font>&nbsp;&nbsp;<font color = "maroon">p</font><font color = "silver">.</font><font color = "maroon">country_code</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">@can_code</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>Self&nbsp;explanatory&nbsp;-&nbsp;gathering&nbsp;the&nbsp;min,&nbsp;max,&nbsp;and&nbsp;avg&nbsp;of&nbsp;both&nbsp;gdp&nbsp;&&nbsp;inflation,&nbsp;over
+
+<br/>all&nbsp;countries&nbsp;within&nbsp;our&nbsp;country&nbsp;relation
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "#FF0080"><b>Min</b></font><font color = "maroon">(</font><font color = "maroon">gdp</font><font color = "maroon">)</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "#FF0080"><b>Max</b></font><font color = "maroon">(</font><font color = "maroon">gdp</font><font color = "maroon">)</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "#FF0080"><b>Avg</b></font><font color = "maroon">(</font><font color = "maroon">gdp</font><font color = "maroon">)</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "#FF0080"><b>Min</b></font><font color = "maroon">(</font><font color = "maroon">inflation</font><font color = "maroon">)</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "#FF0080"><b>Max</b></font><font color = "maroon">(</font><font color = "maroon">inflation</font><font color = "maroon">)</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "#FF0080"><b>Avg</b></font><font color = "maroon">(</font><font color = "maroon">inflation</font><font color = "maroon">)</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">country</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>We&nbsp;select&nbsp;all&nbsp;rows&nbsp;in&nbsp;city&nbsp;where&nbsp;c.country_code&nbsp;=&nbsp;@usa_code,&nbsp;then&nbsp;count&nbsp;the
+
+<br/>number&nbsp;of&nbsp;rows&nbsp;selected.&nbsp;This&nbsp;gathers&nbsp;the&nbsp;count&nbsp;of&nbsp;all&nbsp;cities&nbsp;in&nbsp;our&nbsp;database
+
+<br/>within&nbsp;the&nbsp;USA.
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "#FF0080"><b>Count</b></font><font color = "maroon">(</font><font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">city_name</font><font color = "maroon">)</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">city</font>&nbsp;<font color = "maroon">c</font>
+<br/><font color = "blue">WHERE</font>&nbsp;&nbsp;<font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">country_code</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">@usa_code</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>We&nbsp;select&nbsp;all&nbsp;rows&nbsp;where&nbsp;the&nbsp;USA&nbsp;is&nbsp;one&nbsp;of&nbsp;the&nbsp;two&nbsp;countries&nbsp;describing&nbsp;a&nbsp;border,
+
+<br/>and&nbsp;count&nbsp;the&nbsp;number&nbsp;of&nbsp;occurences&nbsp;of&nbsp;these&nbsp;borders,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;average&nbsp;border
+
+<br/>length.
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "#FF0080"><b>Count</b></font><font color = "maroon">(</font><font color = "maroon">b</font><font color = "silver">.</font><font color = "maroon">country1_code</font><font color = "maroon">)</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "#FF0080"><b>Avg</b></font><font color = "maroon">(</font><font color = "maroon">b</font><font color = "silver">.</font><font color = "maroon">border_length</font><font color = "maroon">)</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">border</font>&nbsp;<font color = "maroon">b</font>
+<br/><font color = "blue">WHERE</font>&nbsp;&nbsp;<font color = "maroon">b</font><font color = "silver">.</font><font color = "maroon">country1_code</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">@usa_code</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">OR</font>&nbsp;<font color = "maroon">b</font><font color = "silver">.</font><font color = "maroon">country2_code</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">@usa_code</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>We&nbsp;join&nbsp;the&nbsp;tables&nbsp;city&nbsp;and&nbsp;province&nbsp;on&nbsp;the&nbsp;attributes&nbsp;province_name
+
+<br/>and&nbsp;country_code,&nbsp;meaning&nbsp;all&nbsp;cities&nbsp;in&nbsp;a&nbsp;row&nbsp;exist&nbsp;within&nbsp;the&nbsp;listed&nbsp;province.
+
+<br/>Then,&nbsp;we&nbsp;gather&nbsp;cities&nbsp;in&nbsp;province&nbsp;"California",&nbsp;that&nbsp;are&nbsp;NOT&nbsp;san&nbsp;francisco,
+
+<br/>and&nbsp;average&nbsp;their&nbsp;populations.
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "#FF0080"><b>Avg</b></font><font color = "maroon">(</font><font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">population</font><font color = "maroon">)</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">city</font>&nbsp;<font color = "maroon">c</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">JOIN</font>&nbsp;<font color = "maroon">province</font>&nbsp;<font color = "maroon">p</font>&nbsp;<font color = "blue">USING</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">province_name</font><font color = "silver">,</font>&nbsp;<font color = "maroon">country_code</font><font color = "maroon">)</font>
+<br/><font color = "blue">WHERE</font>&nbsp;&nbsp;<font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">city_name</font>&nbsp;<font color = "silver">&lt;&gt;</font>&nbsp;<font color = "maroon">@sf_code</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">AND</font>&nbsp;<font color = "maroon">p</font><font color = "silver">.</font><font color = "maroon">province_name</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">&quot;california&quot;</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>This&nbsp;query&nbsp;is&nbsp;fairly&nbsp;convoluted.&nbsp;Essentially,&nbsp;we're&nbsp;making&nbsp;all&nbsp;possible&nbsp;country
+
+<br/>pairings&nbsp;where&nbsp;c1&nbsp;is&nbsp;NOT&nbsp;the&nbsp;usa,&nbsp;and&nbsp;c2&nbsp;is.&nbsp;Then,&nbsp;via&nbsp;inner&nbsp;join,&nbsp;we're&nbsp;selecting
+
+<br/>all&nbsp;of&nbsp;these&nbsp;country&nbsp;pairings&nbsp;that&nbsp;describe&nbsp;a&nbsp;border&nbsp;between&nbsp;the&nbsp;US&nbsp;and&nbsp;another&nbsp;country.
+
+<br/>From&nbsp;this,&nbsp;we&nbsp;select&nbsp;those&nbsp;countries&nbsp;c1&nbsp;(other)&nbsp;with&nbsp;a&nbsp;higher&nbsp;inflation,&nbsp;and&nbsp;lower&nbsp;gdp,
+
+<br/>than&nbsp;c2&nbsp;(USA).&nbsp;
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "maroon">c1</font><font color = "silver">.</font><font color = "maroon">country_code</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">country</font>&nbsp;<font color = "maroon">c1</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">INNER</font>&nbsp;<font color = "blue">JOIN</font>&nbsp;<font color = "maroon">country</font>&nbsp;<font color = "maroon">c2</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">ON</font>&nbsp;<font color = "maroon">(</font>&nbsp;<font color = "maroon">c1</font><font color = "silver">.</font><font color = "maroon">country_code</font>&nbsp;<font color = "silver">&lt;&gt;</font>&nbsp;<font color = "maroon">@usa_code</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">AND</font>&nbsp;<font color = "maroon">c2</font><font color = "silver">.</font><font color = "maroon">country_code</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">@usa_code</font>&nbsp;<font color = "maroon">)</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">INNER</font>&nbsp;<font color = "blue">JOIN</font>&nbsp;<font color = "maroon">border</font>&nbsp;<font color = "maroon">b</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">ON</font>&nbsp;<font color = "maroon">(</font>&nbsp;<font color = "maroon">(</font>&nbsp;<font color = "maroon">b</font><font color = "silver">.</font><font color = "maroon">country1_code</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">@usa_code</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">OR</font>&nbsp;<font color = "maroon">b</font><font color = "silver">.</font><font color = "maroon">country2_code</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">@usa_code</font>&nbsp;<font color = "maroon">)</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">AND</font>&nbsp;<font color = "maroon">(</font>&nbsp;<font color = "maroon">b</font><font color = "silver">.</font><font color = "maroon">country1_code</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">c1</font><font color = "silver">.</font><font color = "maroon">country_code</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">OR</font>&nbsp;<font color = "maroon">b</font><font color = "silver">.</font><font color = "maroon">country2_code</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">c1</font><font color = "silver">.</font><font color = "maroon">country_code</font>&nbsp;<font color = "maroon">)</font>&nbsp;<font color = "maroon">)</font>
+<br/><font color = "blue">WHERE</font>&nbsp;&nbsp;<font color = "maroon">c2</font><font color = "silver">.</font><font color = "maroon">inflation</font>&nbsp;<font color = "silver">&lt;</font>&nbsp;<font color = "maroon">c1</font><font color = "silver">.</font><font color = "maroon">inflation</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">AND</font>&nbsp;<font color = "maroon">c2</font><font color = "silver">.</font><font color = "maroon">gdp</font>&nbsp;<font color = "silver">&gt;</font>&nbsp;<font color = "maroon">c1</font><font color = "silver">.</font><font color = "maroon">gdp</font><font color = "silver">;</font>&nbsp;
+</font>
+
