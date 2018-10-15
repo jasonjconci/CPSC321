@@ -1,0 +1,174 @@
+<font face="Courier New" size="2">
+<font color = "green"><i>/*
+
+<br/>*
+
+<br/>*&nbsp;Homework&nbsp;#5&nbsp;Script:&nbsp;More&nbsp;Database&nbsp;Queries.&nbsp;Queries&nbsp;are&nbsp;presented&nbsp;in&nbsp;order
+
+<br/>*&nbsp;they&nbsp;are&nbsp;asked&nbsp;in&nbsp;the&nbsp;homework&nbsp;PDF,&nbsp;along&nbsp;with&nbsp;a&nbsp;plain(ish)&nbsp;English
+
+<br/>*&nbsp;description&nbsp;in&nbsp;a&nbsp;comment&nbsp;block,&nbsp;above&nbsp;each&nbsp;query.
+
+<br/>*
+
+<br/>*/</i></font>
+<br/><font color = "green"><i>/*
+
+<br/>This&nbsp;query&nbsp;will&nbsp;select&nbsp;all&nbsp;distinct&nbsp;provinces,&nbsp;along&nbsp;with&nbsp;corresponding
+
+<br/>province&nbsp;area,&nbsp;for&nbsp;provinces&nbsp;containing&nbsp;a&nbsp;city&nbsp;with&nbsp;a&nbsp;population&nbsp;greater
+
+<br/>than&nbsp;1000.
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "blue">DISTINCT</font>&nbsp;<font color = "maroon">p</font><font color = "silver">.</font><font color = "maroon">province_name</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">p</font><font color = "silver">.</font><font color = "maroon">area</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">province</font>&nbsp;<font color = "maroon">p</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">JOIN</font>&nbsp;<font color = "maroon">city</font>&nbsp;<font color = "maroon">c</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">ON</font>&nbsp;<font color = "maroon">(</font>&nbsp;<font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">province_name</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">p</font><font color = "silver">.</font><font color = "maroon">province_name</font>&nbsp;<font color = "maroon">)</font>
+<br/><font color = "blue">WHERE</font>&nbsp;&nbsp;<font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">population</font>&nbsp;<font color = "silver">&gt;</font>&nbsp;<font color = "black">1000</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>This&nbsp;query&nbsp;will&nbsp;select&nbsp;a&nbsp;city's&nbsp;name,&nbsp;along&nbsp;with&nbsp;that&nbsp;city's&nbsp;country's
+
+<br/>name,&nbsp;if&nbsp;that&nbsp;city,&nbsp;say&nbsp;c1,&nbsp;shares&nbsp;a&nbsp;name&nbsp;with&nbsp;another&nbsp;city,&nbsp;say&nbsp;c2,&nbsp;
+
+<br/>in&nbsp;a&nbsp;different&nbsp;country,&nbsp;and&nbsp;c1&nbsp;&nbsp;has&nbsp;a&nbsp;larger&nbsp;population&nbsp;than&nbsp;c2.
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "maroon">c1</font><font color = "silver">.</font><font color = "maroon">city_name</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">c1</font><font color = "silver">.</font><font color = "maroon">country_code</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">city</font>&nbsp;<font color = "maroon">c1</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">JOIN</font>&nbsp;<font color = "maroon">city</font>&nbsp;<font color = "maroon">c2</font>&nbsp;<font color = "blue">USING</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">city_name</font><font color = "maroon">)</font>
+<br/><font color = "blue">WHERE</font>&nbsp;&nbsp;<font color = "maroon">c1</font><font color = "silver">.</font><font color = "maroon">country_code</font>&nbsp;<font color = "silver">&lt;&gt;</font>&nbsp;<font color = "maroon">c2</font><font color = "silver">.</font><font color = "maroon">country_code</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">AND</font>&nbsp;<font color = "maroon">c1</font><font color = "silver">.</font><font color = "maroon">population</font>&nbsp;<font color = "silver">&gt;</font>&nbsp;<font color = "maroon">c2</font><font color = "silver">.</font><font color = "maroon">population</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>Selects&nbsp;the&nbsp;country&nbsp;code,&nbsp;gdp,&nbsp;inflation,&nbsp;and&nbsp;total&nbsp;population&nbsp;for
+
+<br/>each&nbsp;country.&nbsp;Population&nbsp;is&nbsp;the&nbsp;sum&nbsp;of&nbsp;all&nbsp;cities&nbsp;within&nbsp;a&nbsp;country
+
+<br/>present&nbsp;within&nbsp;our&nbsp;city&nbsp;table.
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "maroon">co</font><font color = "silver">.</font><font color = "maroon">country_code</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">co</font><font color = "silver">.</font><font color = "maroon">gdp</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">co</font><font color = "silver">.</font><font color = "maroon">inflation</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "#FF0080"><b>Sum</b></font><font color = "maroon">(</font><font color = "maroon">ci</font><font color = "silver">.</font><font color = "maroon">population</font><font color = "maroon">)</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">country</font>&nbsp;<font color = "maroon">co</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">JOIN</font>&nbsp;<font color = "maroon">city</font>&nbsp;<font color = "maroon">ci</font>&nbsp;<font color = "blue">USING</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">country_code</font><font color = "maroon">)</font>
+<br/><font color = "blue">GROUP</font>&nbsp;&nbsp;<font color = "blue">BY</font>&nbsp;<font color = "maroon">co</font><font color = "silver">.</font><font color = "maroon">country_code</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>Selects&nbsp;province&nbsp;name,&nbsp;province&nbsp;area,&nbsp;and&nbsp;sum&nbsp;of&nbsp;populations&nbsp;of
+
+<br/>cities&nbsp;within&nbsp;a&nbsp;province.&nbsp;Only&nbsp;selects&nbsp;provinces&nbsp;where&nbsp;the&nbsp;sum&nbsp;of
+
+<br/>city&nbsp;populations&nbsp;is&nbsp;greater&nbsp;than&nbsp;1,000,000.
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "maroon">p</font><font color = "silver">.</font><font color = "maroon">province_name</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">p</font><font color = "silver">.</font><font color = "maroon">area</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "#FF0080"><b>Sum</b></font><font color = "maroon">(</font><font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">population</font><font color = "maroon">)</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">province</font>&nbsp;<font color = "maroon">p</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">JOIN</font>&nbsp;<font color = "maroon">city</font>&nbsp;<font color = "maroon">c</font>&nbsp;<font color = "blue">USING</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">province_name</font><font color = "maroon">)</font>
+<br/><font color = "blue">GROUP</font>&nbsp;&nbsp;<font color = "blue">BY</font>&nbsp;<font color = "maroon">p</font><font color = "silver">.</font><font color = "maroon">province_name</font>
+<br/><font color = "blue">HAVING</font>&nbsp;<font color = "#FF0080"><b>Sum</b></font><font color = "maroon">(</font><font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">population</font><font color = "maroon">)</font>&nbsp;<font color = "silver">&gt;</font>&nbsp;<font color = "black">1000000</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>Selects&nbsp;country&nbsp;code,&nbsp;and&nbsp;country&nbsp;population&nbsp;(computed&nbsp;via&nbsp;sum
+
+<br/>of&nbsp;populations&nbsp;of&nbsp;cities&nbsp;within&nbsp;the&nbsp;country).&nbsp;Ordered&nbsp;by&nbsp;country
+
+<br/>population,&nbsp;from&nbsp;highest&nbsp;to&nbsp;lowest.
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "maroon">co</font><font color = "silver">.</font><font color = "maroon">country_code</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "#FF0080"><b>Sum</b></font><font color = "maroon">(</font><font color = "maroon">ci</font><font color = "silver">.</font><font color = "maroon">population</font><font color = "maroon">)</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">country</font>&nbsp;<font color = "maroon">co</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">JOIN</font>&nbsp;<font color = "maroon">city</font>&nbsp;<font color = "maroon">ci</font>&nbsp;<font color = "blue">USING</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">country_code</font><font color = "maroon">)</font>
+<br/><font color = "blue">GROUP</font>&nbsp;&nbsp;<font color = "blue">BY</font>&nbsp;<font color = "maroon">co</font><font color = "silver">.</font><font color = "maroon">country_code</font>
+<br/><font color = "blue">ORDER</font>&nbsp;&nbsp;<font color = "blue">BY</font>&nbsp;<font color = "#FF0080"><b>Sum</b></font><font color = "maroon">(</font><font color = "maroon">ci</font><font color = "silver">.</font><font color = "maroon">population</font><font color = "maroon">)</font>&nbsp;<font color = "blue">DESC</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>Selects&nbsp;country&nbsp;code,&nbsp;and&nbsp;country&nbsp;area&nbsp;(computed&nbsp;via&nbsp;sum&nbsp;of
+
+<br/>all&nbsp;areas&nbsp;of&nbsp;provinces&nbsp;within&nbsp;a&nbsp;country).&nbsp;Ordered&nbsp;by&nbsp;country
+
+<br/>size,&nbsp;from&nbsp;highest&nbsp;to&nbsp;lowest.
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">country_code</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "#FF0080"><b>Sum</b></font><font color = "maroon">(</font><font color = "maroon">p</font><font color = "silver">.</font><font color = "maroon">area</font><font color = "maroon">)</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">country</font>&nbsp;<font color = "maroon">c</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">JOIN</font>&nbsp;<font color = "maroon">province</font>&nbsp;<font color = "maroon">p</font>&nbsp;<font color = "blue">USING</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">country_code</font><font color = "maroon">)</font>
+<br/><font color = "blue">GROUP</font>&nbsp;&nbsp;<font color = "blue">BY</font>&nbsp;<font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">country_code</font>
+<br/><font color = "blue">ORDER</font>&nbsp;&nbsp;<font color = "blue">BY</font>&nbsp;<font color = "#FF0080"><b>Sum</b></font><font color = "maroon">(</font><font color = "maroon">p</font><font color = "silver">.</font><font color = "maroon">area</font><font color = "maroon">)</font>&nbsp;<font color = "blue">DESC</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>Selects&nbsp;distinct&nbsp;country&nbsp;names,&nbsp;wherein&nbsp;the&nbsp;country&nbsp;contains&nbsp;a
+
+<br/>province&nbsp;containing&nbsp;5&nbsp;or&nbsp;more&nbsp;cities.
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "blue">DISTINCT</font>&nbsp;<font color = "maroon">p</font><font color = "silver">.</font><font color = "maroon">country_code</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "#FF0080"><b>Count</b></font><font color = "maroon">(</font><font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">city_name</font><font color = "maroon">)</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">province</font>&nbsp;<font color = "maroon">p</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">JOIN</font>&nbsp;<font color = "maroon">city</font>&nbsp;<font color = "maroon">c</font>&nbsp;<font color = "blue">USING</font>&nbsp;<font color = "maroon">(</font><font color = "maroon">province_name</font><font color = "maroon">)</font>
+<br/><font color = "blue">GROUP</font>&nbsp;&nbsp;<font color = "blue">BY</font>&nbsp;<font color = "maroon">p</font><font color = "silver">.</font><font color = "maroon">province_name</font>
+<br/><font color = "blue">HAVING</font>&nbsp;<font color = "#FF0080"><b>Count</b></font><font color = "maroon">(</font><font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">city_name</font><font color = "maroon">)</font>&nbsp;<font color = "silver">&gt;=</font>&nbsp;<font color = "black">5</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>#&nbsp;Deleting&nbsp;our&nbsp;assoc_borders&nbsp;view,&nbsp;if&nbsp;it&nbsp;already&nbsp;exists</i></font>
+<br/><font color = "blue">DROP</font>&nbsp;<font color = "maroon">view</font>&nbsp;<font color = "blue">IF</font>&nbsp;<font color = "blue">EXISTS</font>&nbsp;<font color = "maroon">assoc_borders</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>Creates&nbsp;an&nbsp;"associative"&nbsp;view&nbsp;of&nbsp;all&nbsp;borders&nbsp;in&nbsp;our&nbsp;border&nbsp;table.
+
+<br/>That&nbsp;is,&nbsp;for&nbsp;each&nbsp;row&nbsp;containing&nbsp;c1-c2-len&nbsp;in&nbsp;the&nbsp;border&nbsp;table,
+
+<br/>assoc_borders&nbsp;will&nbsp;contain&nbsp;this&nbsp;row,&nbsp;as&nbsp;well&nbsp;as&nbsp;c2-c1-len.
+
+<br/>Using&nbsp;a&nbsp;union&nbsp;because&nbsp;it&nbsp;seems&nbsp;like&nbsp;the&nbsp;simplest&nbsp;way&nbsp;to&nbsp;do&nbsp;this.
+
+<br/>*/</i></font>
+<br/><font color = "blue">CREATE</font>&nbsp;<font color = "maroon">view</font>&nbsp;<font color = "maroon">assoc_borders</font>
+<br/><font color = "blue">AS</font>
+<br/>&nbsp;&nbsp;<font color = "maroon">(</font><font color = "blue">SELECT</font>&nbsp;<font color = "silver">*</font>
+<br/>&nbsp;&nbsp;&nbsp;<font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">border</font><font color = "maroon">)</font>
+<br/>&nbsp;&nbsp;<font color = "blue">UNION</font>
+<br/>&nbsp;&nbsp;<font color = "maroon">(</font><font color = "blue">SELECT</font>&nbsp;<font color = "maroon">country2_code</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">country1_code</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "maroon">border_length</font>
+<br/>&nbsp;&nbsp;&nbsp;<font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">border</font><font color = "maroon">)</font><font color = "silver">;</font>
+<br/>
+<br/><font color = "green"><i>/*
+
+<br/>Select&nbsp;the&nbsp;country_code,&nbsp;as&nbsp;well&nbsp;as&nbsp;avg&nbsp;gdp&nbsp;and&nbsp;inflation&nbsp;of&nbsp;countries
+
+<br/>our&nbsp;country&nbsp;borders.&nbsp;Country&nbsp;in&nbsp;question&nbsp;is&nbsp;country_1,&nbsp;we&nbsp;join&nbsp;with
+
+<br/>country&nbsp;c&nbsp;on&nbsp;a.country2_code.&nbsp;We&nbsp;group&nbsp;by&nbsp;a.country1,&nbsp;and&nbsp;average&nbsp;the
+
+<br/>gdp&nbsp;and&nbsp;inflations&nbsp;in&nbsp;the&nbsp;group,&nbsp;which&nbsp;are&nbsp;always&nbsp;country1.&nbsp;Order&nbsp;by
+
+<br/>gdp,&nbsp;then&nbsp;inflation,&nbsp;in&nbsp;ascending&nbsp;order.
+
+<br/>*/</i></font>
+<br/><font color = "blue">SELECT</font>&nbsp;<font color = "maroon">a</font><font color = "silver">.</font><font color = "maroon">country1_code</font>&nbsp;&nbsp;<font color = "blue">AS</font>&nbsp;<font color = "maroon">&quot;country&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "#FF0080"><b>Avg</b></font><font color = "maroon">(</font><font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">gdp</font><font color = "maroon">)</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">AS</font>&nbsp;<font color = "maroon">&quot;border&nbsp;avg&nbsp;gdp&quot;</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "#FF0080"><b>Avg</b></font><font color = "maroon">(</font><font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">inflation</font><font color = "maroon">)</font>&nbsp;<font color = "blue">AS</font>&nbsp;<font color = "maroon">&quot;border&nbsp;avg&nbsp;inflation&quot;</font>
+<br/><font color = "blue">FROM</font>&nbsp;&nbsp;&nbsp;<font color = "maroon">assoc_borders</font>&nbsp;<font color = "maroon">a</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">JOIN</font>&nbsp;<font color = "maroon">country</font>&nbsp;<font color = "maroon">c</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "blue">ON</font>&nbsp;<font color = "maroon">(</font>&nbsp;<font color = "maroon">a</font><font color = "silver">.</font><font color = "maroon">country2_code</font>&nbsp;<font color = "silver">=</font>&nbsp;<font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">country_code</font>&nbsp;<font color = "maroon">)</font>
+<br/><font color = "blue">GROUP</font>&nbsp;&nbsp;<font color = "blue">BY</font>&nbsp;<font color = "maroon">a</font><font color = "silver">.</font><font color = "maroon">country1_code</font>
+<br/><font color = "blue">ORDER</font>&nbsp;&nbsp;<font color = "blue">BY</font>&nbsp;<font color = "#FF0080"><b>Avg</b></font><font color = "maroon">(</font><font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">gdp</font><font color = "maroon">)</font><font color = "silver">,</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color = "#FF0080"><b>Avg</b></font><font color = "maroon">(</font><font color = "maroon">c</font><font color = "silver">.</font><font color = "maroon">inflation</font><font color = "maroon">)</font>&nbsp;<font color = "blue">ASC</font><font color = "silver">;</font>&nbsp;
+</font>
+
